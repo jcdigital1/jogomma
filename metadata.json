@@ -1,0 +1,8 @@
+{
+  "name": "Apex Octagon 3D",
+  "description": "Jogo completo de MMA em 3D com octógono profissional, combate articulado em tempo real, modo treino contra IA e multiplayer online entre celulares via WebSocket.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

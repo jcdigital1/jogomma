@@ -65,7 +65,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
 
         <button
           type="button"
-          onClick={() => requestLandscapeFullscreen()}
+          onClick={() => requestLandscapeFullscreen(true)}
           className="pointer-events-auto inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-[#0d1017]/90 px-3 py-1.5 text-xs font-medium text-slate-200 hover:bg-white/10 active:scale-95"
         >
           <Maximize2 className="h-3.5 w-3.5" />

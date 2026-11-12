@@ -174,6 +174,7 @@ export interface CombatEvent {
   targetSlot?: 0 | 1;
   zone?: HitZone;
   isHeavy?: boolean;
+  isCounter?: boolean;
   x: number;
   y: number;
   z: number;
@@ -199,6 +200,7 @@ export interface MatchState {
 export type ClientWsMessage =
   | { type: 'create_room'; fighterId: FighterId }
   | { type: 'join_room'; code: string; fighterId: FighterId }
+  | { type: 'join_with_password'; password: string; fighterId: FighterId }
   | { type: 'reconnect_room'; code: string; token: string }
   | { type: 'select_fighter'; fighterId: FighterId }
   | { type: 'set_ready'; ready: boolean }

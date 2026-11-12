@@ -394,6 +394,101 @@ async function bootstrap() {
         return;
       }
 
+      if (msg.type === 'join_with_password') {
+        const cleanPass = msg.password
+          .trim()
+          .toUpperCase()
+          .replace(/[^A-Z0-9_-]/g, '');
+        if (cleanPass.length < 3 || cleanPass.length > 16) {
+          sendMsg(ws, {
+            type: 'room_error',
+            message: 'Digite uma senha entre 3 e 16 letras ou números.',
+          });
+          return;
+        }
+        if (boundRoomCode) detachPlayer(true);
+
+        let room = rooms.get(cleanPass);
+        if (!room) {
+          const token = generateToken();
+          const p0: RoomPlayer = {
+            slot: 0,
+            token,
+            fighterId: msg.fighterId,
+            ready: true,
+            connected: true,
+            ws,
+            latestInput: emptyInput(),
+            edgeFlags: createEmptyEdgeFlags(),
+            disconnectTimer: null,
+          };
+          room = {
+            code: cleanPass,
+            status: 'waiting',
+            players: [p0, null],
+            match: null,
+            lastTickMs: Date.now(),
+            loopTimer: null,
+            createdAt: Date.now(),
+          };
+          rooms.set(cleanPass, room);
+          boundRoomCode = cleanPass;
+          boundSlot = 0;
+          sendMsg(ws, {
+            type: 'room_joined',
+            code: cleanPass,
+            slot: 0,
+            token,
+            players: getRoomSummaries(room),
+          });
+          broadcastRoomUpdate(room);
+          return;
+        }
+
+        const openSlot: 0 | 1 | null =
+          room.players[0] === null ? 0 : room.players[1] === null ? 1 : null;
+        if (openSlot === null) {
+          sendMsg(ws, {
+            type: 'room_error',
+            message: 'Já existem 2 lutadores nesta senha. Tente outra senha.',
+          });
+          return;
+        }
+
+        const token = generateToken();
+        const player: RoomPlayer = {
+          slot: openSlot,
+          token,
+          fighterId: msg.fighterId,
+          ready: true,
+          connected: true,
+          ws,
+          latestInput: emptyInput(),
+          edgeFlags: createEmptyEdgeFlags(),
+          disconnectTimer: null,
+        };
+        room.players[openSlot] = player;
+        boundRoomCode = cleanPass;
+        boundSlot = openSlot;
+        sendMsg(ws, {
+          type: 'room_joined',
+          code: cleanPass,
+          slot: openSlot,
+          token,
+          players: getRoomSummaries(room),
+        });
+        broadcastRoomUpdate(room);
+
+        if (
+          room.players[0]?.ready &&
+          room.players[1]?.ready &&
+          (room.status === 'waiting' || room.status === 'finished')
+        ) {
+          startRoomMatch(room);
+        }
+        return;
+      }
+
       if (msg.type === 'reconnect_room') {
         const cleanCode = msg.code.trim().toUpperCase();
         const room = rooms.get(cleanCode);
@@ -438,7 +533,9 @@ async function bootstrap() {
 
       if (msg.type === 'select_fighter') {
         player.fighterId = msg.fighterId;
-        player.ready = false;
+        if (room.players[0] && room.players[1]) {
+          player.ready = false;
+        }
         broadcastRoomUpdate(room);
       } else if (msg.type === 'set_ready') {
         player.ready = msg.ready;

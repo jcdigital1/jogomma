@@ -147,6 +147,14 @@ export class MultiplayerClient {
     this.send({ type: 'join_room', code, fighterId });
   }
 
+  public async enterWithPassword(
+    password: string,
+    fighterId: FighterId,
+  ): Promise<void> {
+    await this.connect();
+    this.send({ type: 'join_with_password', password, fighterId });
+  }
+
   public selectFighter(fighterId: FighterId): void {
     this.send({ type: 'select_fighter', fighterId });
   }

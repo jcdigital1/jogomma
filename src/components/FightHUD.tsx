@@ -1,7 +1,8 @@
 import React, { useRef, useState } from 'react';
-import { Pause, Volume2, VolumeX } from 'lucide-react';
+import { Maximize2, Pause, Volume2, VolumeX } from 'lucide-react';
 import { FIGHTER_PROFILES, MOVES } from '../shared/combatEngine.ts';
 import { FighterInput, MatchState } from '../shared/types.ts';
+import { requestLandscapeFullscreen } from './OrientationGuard.tsx';
 
 interface FightHUDProps {
   match: MatchState;
@@ -195,13 +196,21 @@ export const FightHUD: React.FC<FightHUDProps> = ({
     f1.activeMove === 'submission_attempt';
   const subProgress = Math.max(f0.submissionProgress, f1.submissionProgress);
 
+  const recentCounter = match.events.some(
+    (ev, idx) =>
+      idx >= match.events.length - 4 &&
+      ev.type === 'strike_hit' &&
+      ev.isCounter &&
+      ev.actorSlot === playerSlot,
+  );
+
   return (
     <div className="pointer-events-none fixed inset-0 z-20 flex flex-col justify-between safe-area-hud">
       {/* TOP FIGHT HUD BAR WITH PORTRAIT AVATARS */}
       <div className="flex items-start justify-between gap-2 sm:gap-4 px-1">
         {/* FIGHTER 1 (LEFT - RED) */}
         <div className="flex flex-1 max-w-[39%] items-center gap-2">
-          <div className="hidden sm:block h-12 w-12 shrink-0 overflow-hidden rounded-lg border-2 border-[#d91e2a] bg-[#11141c]">
+          <div className="h-9 w-9 sm:h-12 sm:w-12 shrink-0 overflow-hidden rounded-lg border-2 border-[#d91e2a] bg-[#11141c]">
             <img
               src={p0.avatarUrl}
               alt={p0.name}
@@ -277,6 +286,14 @@ export const FightHUD: React.FC<FightHUDProps> = ({
                 <Volume2 className="h-3.5 w-3.5" />
               )}
             </button>
+            <button
+              type="button"
+              onClick={() => requestLandscapeFullscreen(true)}
+              aria-label="Tela Cheia"
+              className="flex h-7 w-7 items-center justify-center rounded-md border border-white/15 bg-[#0b0d13]/88 text-slate-200 hover:bg-white/10 active:scale-95"
+            >
+              <Maximize2 className="h-3.5 w-3.5" />
+            </button>
             {isMultiplayer && latencyMs !== null && (
               <span className="font-mono-tabular text-[10px] text-slate-300 bg-[#0b0d13]/85 px-1.5 py-0.5 rounded border border-white/10">
                 {latencyMs}ms
@@ -317,7 +334,7 @@ export const FightHUD: React.FC<FightHUDProps> = ({
               <span>PRN {Math.round(f1.legIntegrity)}%</span>
             </div>
           </div>
-          <div className="hidden sm:block h-12 w-12 shrink-0 overflow-hidden rounded-lg border-2 border-[#1d6feb] bg-[#11141c]">
+          <div className="h-9 w-9 sm:h-12 sm:w-12 shrink-0 overflow-hidden rounded-lg border-2 border-[#1d6feb] bg-[#11141c]">
             <img
               src={p1.avatarUrl}
               alt={p1.name}
@@ -401,16 +418,22 @@ export const FightHUD: React.FC<FightHUDProps> = ({
             </div>
           )}
 
-        {match.phase === 'fighting' && localFighter.activeMove !== 'none' && (
-          <div className="mt-1 flex items-center gap-2 rounded bg-[#090b10]/80 px-2.5 py-0.5 text-[11px] font-bold tracking-wider text-white">
-            <span>{MOVES[localFighter.activeMove].label}</span>
-            {localFighter.comboStep > 0 && (
-              <span className="text-amber-400">
-                COMBO x{localFighter.comboStep + 1}
-              </span>
-            )}
-          </div>
-        )}
+        {match.phase === 'fighting' &&
+          (localFighter.activeMove !== 'none' || localFighter.counterWindow > 0.1) && (
+            <div className="mt-1 flex items-center gap-2 rounded bg-[#090b10]/85 px-2.5 py-0.5 text-[11px] font-bold tracking-wider text-white">
+              {localFighter.activeMove !== 'none' && (
+                <span>{MOVES[localFighter.activeMove].label}</span>
+              )}
+              {localFighter.comboStep > 0 && (
+                <span className="text-amber-400">
+                  COMBO x{localFighter.comboStep + 1}
+                </span>
+              )}
+              {(recentCounter || localFighter.counterWindow > 0.1) && (
+                <span className="text-emerald-400">CONTRAGOLPE!</span>
+              )}
+            </div>
+          )}
       </div>
 
       {/* BOTTOM CONSOLE GAMEPAD CONTROLS: ANALOG STICK LEFT + X / Y / A / B-CIRCLE RIGHT */}

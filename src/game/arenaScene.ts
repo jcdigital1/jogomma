@@ -162,12 +162,14 @@ export class ArenaSceneController {
     this.keyLight.shadow.normalBias = 0.02;
     this.scene.add(this.keyLight);
 
-    // Warm red & cool blue corner rim lights
+    // Warm red & cool blue corner rim lights + crisp front fighter fill light
     const redRim = new THREE.PointLight(0xd91e2a, 16, 18, 1.6);
     redRim.position.set(-5.8, 3.6, -2.5);
     const blueRim = new THREE.PointLight(0x1d6feb, 16, 18, 1.6);
     blueRim.position.set(5.8, 3.6, -2.5);
-    this.scene.add(redRim, blueRim);
+    const frontFill = new THREE.DirectionalLight(0xdbeafe, 0.95);
+    frontFill.position.set(0, 3.0, 6.5);
+    this.scene.add(redRim, blueRim, frontFill);
 
     this.buildArenaAndOctagon();
     this.buildCrowd();
@@ -497,23 +499,28 @@ export class ArenaSceneController {
   }
 
   private buildCrowd(): void {
-    // Tiered stadium bleachers around the octagon + InstancedMesh spectators
+    // Hollow tiered stadium bleachers around the octagon (r = 9.2m to 18.6m)
     const tierMat = new THREE.MeshStandardMaterial({
       color: 0x0f1218,
       roughness: 0.9,
       metalness: 0.1,
     });
-    this.disposables.push(tierMat);
-
-    for (let t = 0; t < 4; t++) {
-      const innerR = 9.5 + t * 2.4;
-      const outerR = innerR + 2.2;
-      const ringGeo = new THREE.CylinderGeometry(outerR, innerR, 0.9, 24, 1, false);
-      this.disposables.push(ringGeo);
-      const tier = new THREE.Mesh(ringGeo, tierMat);
-      tier.position.y = -0.35 + t * 0.95;
-      this.scene.add(tier);
-    }
+    const bleacherPoints = [
+      new THREE.Vector2(9.2, -0.82),
+      new THREE.Vector2(9.2, 0.15),
+      new THREE.Vector2(11.4, 0.15),
+      new THREE.Vector2(11.4, 1.1),
+      new THREE.Vector2(13.8, 1.1),
+      new THREE.Vector2(13.8, 2.05),
+      new THREE.Vector2(16.2, 2.05),
+      new THREE.Vector2(16.2, 3.0),
+      new THREE.Vector2(18.6, 3.0),
+      new THREE.Vector2(18.6, -0.82),
+    ];
+    const bleachersGeo = new THREE.LatheGeometry(bleacherPoints, 32);
+    this.disposables.push(tierMat, bleachersGeo);
+    const bleachersMesh = new THREE.Mesh(bleachersGeo, tierMat);
+    this.scene.add(bleachersMesh);
 
     const specGeo = new THREE.CapsuleGeometry(0.18, 0.42, 4, 8);
     const specMat = new THREE.MeshStandardMaterial({
@@ -773,10 +780,12 @@ export class ArenaSceneController {
     if (this.mode === 'menu') {
       // Showcase both fighters in ready stance facing off in center octagon
       this.ensureFighterProfiles('jean', 'charles');
+      this.fighterRigs[0].root.visible = true;
+      this.fighterRigs[1].root.visible = true;
       const dummy0: FighterState = {
         slot: 0,
         profileId: 'jean',
-        x: -1.1,
+        x: -0.95,
         z: 0,
         vx: 0,
         vz: 0,
@@ -813,7 +822,7 @@ export class ArenaSceneController {
         ...dummy0,
         slot: 1,
         profileId: 'charles',
-        x: 1.1,
+        x: 0.95,
         facing: Math.PI,
       };
       updateFighterRig(this.fighterRigs[0], dummy0, elapsed, dt, false);
@@ -821,20 +830,23 @@ export class ArenaSceneController {
       updateRefereeRig(this.refereeRig, dummy0, dummy1, false, elapsed, dt);
 
       _camDesired.set(
-        Math.sin(elapsed * 0.22) * 4.9,
-        2.35 + Math.sin(elapsed * 0.35) * 0.25,
-        Math.cos(elapsed * 0.22) * 4.9,
+        Math.sin(elapsed * 0.16) * 2.2 + 0.35,
+        1.95 + Math.sin(elapsed * 0.32) * 0.12,
+        4.35,
       );
-      _targetDesired.set(0, 1.05, 0);
+      _targetDesired.set(-0.55, 0.96, 0);
       this.camera.position.lerp(_camDesired, 1 - Math.exp(-3.5 * dt));
       _camLookCurrent.lerp(_targetDesired, 1 - Math.exp(-4.5 * dt));
       this.camera.lookAt(_camLookCurrent);
     } else if (this.mode === 'select') {
-      // Hero close-up inspection of selected fighter
+      // Hero close-up inspection facing the camera on the open left/center showcase
       this.ensureFighterProfiles('jean', 'charles');
       const idx = this.previewFighter === 'jean' ? 0 : 1;
       const otherIdx = idx === 0 ? 1 : 0;
-      const heroX = idx === 0 ? -0.9 : 0.9;
+      const heroX = -0.55;
+
+      this.fighterRigs[idx].root.visible = true;
+      this.fighterRigs[otherIdx].root.visible = false;
 
       const heroDummy: FighterState = {
         slot: idx,
@@ -843,7 +855,7 @@ export class ArenaSceneController {
         z: 0,
         vx: 0,
         vz: 0,
-        facing: -Math.PI / 2 + Math.sin(elapsed * 0.6) * 0.35,
+        facing: Math.PI / 2 + Math.sin(elapsed * 0.65) * 0.25,
         posture: 'standing',
         health: 100,
         maxHealth: 100,
@@ -872,25 +884,18 @@ export class ArenaSceneController {
         knockdowns: 0,
         roundDamageDealt: 0,
       };
-      const farDummy: FighterState = {
-        ...heroDummy,
-        slot: otherIdx as 0 | 1,
-        profileId: this.previewFighter === 'jean' ? 'charles' : 'jean',
-        x: idx === 0 ? 2.4 : -2.4,
-        z: -1.6,
-        facing: Math.PI / 2,
-      };
 
       updateFighterRig(this.fighterRigs[idx], heroDummy, elapsed, dt, false);
-      updateFighterRig(this.fighterRigs[otherIdx], farDummy, elapsed, dt, false);
 
-      _camDesired.set(heroX + 0.55, 1.38, 2.55);
-      _targetDesired.set(heroX + 0.32, 1.08, 0);
+      _camDesired.set(-0.22, 1.32, 2.55);
+      _targetDesired.set(-0.18, 1.02, 0);
       this.camera.position.lerp(_camDesired, 1 - Math.exp(-6 * dt));
       _camLookCurrent.lerp(_targetDesired, 1 - Math.exp(-7 * dt));
       this.camera.lookAt(_camLookCurrent);
     } else if (state) {
       // Live Fight Mode
+      this.fighterRigs[0].root.visible = true;
+      this.fighterRigs[1].root.visible = true;
       this.processCombatEvents(state.events);
       const f0 = state.fighters[0];
       const f1 = state.fighters[1];
@@ -1015,8 +1020,18 @@ export class ArenaSceneController {
 
   private handleResize = (): void => {
     if (this.disposed) return;
-    const width = Math.max(1, this.container.clientWidth || window.innerWidth);
-    const height = Math.max(1, this.container.clientHeight || window.innerHeight);
+    const width = Math.max(
+      1,
+      this.container.clientWidth ||
+        window.visualViewport?.width ||
+        window.innerWidth,
+    );
+    const height = Math.max(
+      1,
+      this.container.clientHeight ||
+        window.visualViewport?.height ||
+        window.innerHeight,
+    );
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(width, height);

@@ -1,43 +1,79 @@
 import React, { useEffect, useState } from 'react';
 import { Maximize2 } from 'lucide-react';
 
-export async function requestLandscapeFullscreen(): Promise<void> {
+export async function requestLandscapeFullscreen(
+  allowExit = false,
+): Promise<void> {
   try {
-    const docEl = document.documentElement;
-    if (docEl.requestFullscreen && !document.fullscreenElement) {
-      await docEl.requestFullscreen();
+    const doc = document as Document & {
+      webkitFullscreenElement?: Element | null;
+      webkitExitFullscreen?: () => Promise<void>;
+    };
+    const docEl = document.documentElement as HTMLElement & {
+      webkitRequestFullscreen?: () => Promise<void>;
+      mozRequestFullScreen?: () => Promise<void>;
+      msRequestFullscreen?: () => Promise<void>;
+    };
+    const activeFs = doc.fullscreenElement || doc.webkitFullscreenElement;
+    if (activeFs && allowExit) {
+      if (doc.exitFullscreen) await doc.exitFullscreen();
+      else if (doc.webkitExitFullscreen) await doc.webkitExitFullscreen();
+      return;
+    }
+    if (!activeFs) {
+      if (docEl.requestFullscreen) {
+        await docEl.requestFullscreen({ navigationUI: 'hide' });
+      } else if (docEl.webkitRequestFullscreen) {
+        await docEl.webkitRequestFullscreen();
+      } else if (docEl.mozRequestFullScreen) {
+        await docEl.mozRequestFullScreen();
+      } else if (docEl.msRequestFullscreen) {
+        await docEl.msRequestFullscreen();
+      }
     }
   } catch {
-    // Fullscreen not allowed or unsupported (e.g. iOS Safari)
+    // Fullscreen blocked or unsupported (e.g. iOS Safari)
   }
   try {
     const orientation = screen.orientation as ScreenOrientation & {
       lock?: (orientation: string) => Promise<void>;
     };
     if (orientation && typeof orientation.lock === 'function') {
-      await orientation.lock('landscape');
+      await orientation.lock('landscape').catch(() => orientation.lock?.('landscape-primary'));
     }
   } catch {
     // Orientation lock unsupported by browser; instruction overlay remains until rotated
+  }
+  try {
+    window.scrollTo(0, 1);
+    window.dispatchEvent(new Event('resize'));
+  } catch {
+    // Ignore
   }
 }
 
 export const OrientationGuard: React.FC = () => {
   const [isPortrait, setIsPortrait] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
-    return window.innerHeight > window.innerWidth;
+    const w = window.visualViewport?.width || window.innerWidth;
+    const h = window.visualViewport?.height || window.innerHeight;
+    return h > w;
   });
 
   useEffect(() => {
     const check = () => {
-      setIsPortrait(window.innerHeight > window.innerWidth);
+      const w = window.visualViewport?.width || window.innerWidth;
+      const h = window.visualViewport?.height || window.innerHeight;
+      setIsPortrait(h > w);
     };
     check();
     window.addEventListener('resize', check);
     window.addEventListener('orientationchange', check);
+    window.visualViewport?.addEventListener('resize', check);
     return () => {
       window.removeEventListener('resize', check);
       window.removeEventListener('orientationchange', check);
+      window.visualViewport?.removeEventListener('resize', check);
     };
   }, []);
 

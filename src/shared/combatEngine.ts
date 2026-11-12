@@ -87,12 +87,12 @@ export const MOVES: Record<MoveId, MoveDefinition> = {
     startup: 0.11,
     active: 0.09,
     recovery: 0.15,
-    damage: 5.5,
-    staminaCost: 4.5,
+    damage: 2.6,
+    staminaCost: 4.0,
     reach: 1.28,
     knockback: 0.45,
     stunDuration: 0.18,
-    koMultiplier: 0.85,
+    koMultiplier: 0.8,
     isHeavy: false,
     lungeSpeed: 1.35,
   },
@@ -103,12 +103,12 @@ export const MOVES: Record<MoveId, MoveDefinition> = {
     startup: 0.14,
     active: 0.1,
     recovery: 0.2,
-    damage: 8.5,
-    staminaCost: 7,
+    damage: 4.4,
+    staminaCost: 6.2,
     reach: 1.36,
-    knockback: 0.75,
+    knockback: 0.72,
     stunDuration: 0.25,
-    koMultiplier: 1.15,
+    koMultiplier: 1.1,
     isHeavy: false,
     lungeSpeed: 1.7,
   },
@@ -119,12 +119,12 @@ export const MOVES: Record<MoveId, MoveDefinition> = {
     startup: 0.2,
     active: 0.11,
     recovery: 0.26,
-    damage: 13,
-    staminaCost: 11.5,
+    damage: 6.5,
+    staminaCost: 10.0,
     reach: 1.18,
-    knockback: 1.15,
+    knockback: 1.1,
     stunDuration: 0.36,
-    koMultiplier: 1.45,
+    koMultiplier: 1.35,
     isHeavy: true,
     lungeSpeed: 1.45,
   },
@@ -135,12 +135,12 @@ export const MOVES: Record<MoveId, MoveDefinition> = {
     startup: 0.22,
     active: 0.11,
     recovery: 0.28,
-    damage: 14.5,
-    staminaCost: 12.5,
+    damage: 7.2,
+    staminaCost: 11.0,
     reach: 1.12,
     knockback: 0.95,
     stunDuration: 0.4,
-    koMultiplier: 1.55,
+    koMultiplier: 1.45,
     isHeavy: true,
     lungeSpeed: 1.55,
   },
@@ -151,12 +151,12 @@ export const MOVES: Record<MoveId, MoveDefinition> = {
     startup: 0.25,
     active: 0.11,
     recovery: 0.3,
-    damage: 15.5,
-    staminaCost: 13.5,
+    damage: 7.8,
+    staminaCost: 12.0,
     reach: 1.32,
-    knockback: 1.35,
+    knockback: 1.3,
     stunDuration: 0.42,
-    koMultiplier: 1.6,
+    koMultiplier: 1.5,
     isHeavy: true,
     lungeSpeed: 2.1,
   },
@@ -167,12 +167,12 @@ export const MOVES: Record<MoveId, MoveDefinition> = {
     startup: 0.15,
     active: 0.1,
     recovery: 0.22,
-    damage: 12,
-    staminaCost: 9,
+    damage: 6.0,
+    staminaCost: 8.0,
     reach: 0.96,
     knockback: 0.7,
     stunDuration: 0.36,
-    koMultiplier: 1.45,
+    koMultiplier: 1.35,
     isHeavy: true,
     lungeSpeed: 0.9,
   },
@@ -183,12 +183,12 @@ export const MOVES: Record<MoveId, MoveDefinition> = {
     startup: 0.17,
     active: 0.11,
     recovery: 0.22,
-    damage: 8.5,
-    staminaCost: 8,
+    damage: 4.2,
+    staminaCost: 7.0,
     reach: 1.48,
     knockback: 0.55,
     stunDuration: 0.2,
-    koMultiplier: 0.5,
+    koMultiplier: 0.45,
     isHeavy: false,
     lungeSpeed: 1.1,
   },
@@ -199,12 +199,12 @@ export const MOVES: Record<MoveId, MoveDefinition> = {
     startup: 0.21,
     active: 0.12,
     recovery: 0.25,
-    damage: 12,
-    staminaCost: 10.5,
+    damage: 5.8,
+    staminaCost: 9.5,
     reach: 1.52,
-    knockback: 1.1,
+    knockback: 1.05,
     stunDuration: 0.28,
-    koMultiplier: 0.85,
+    koMultiplier: 0.8,
     isHeavy: true,
     lungeSpeed: 1.25,
   },
@@ -215,12 +215,12 @@ export const MOVES: Record<MoveId, MoveDefinition> = {
     startup: 0.26,
     active: 0.12,
     recovery: 0.33,
-    damage: 18,
-    staminaCost: 15,
+    damage: 9.2,
+    staminaCost: 14.0,
     reach: 1.54,
-    knockback: 1.65,
+    knockback: 1.6,
     stunDuration: 0.48,
-    koMultiplier: 1.85,
+    koMultiplier: 1.7,
     isHeavy: true,
     lungeSpeed: 1.35,
   },
@@ -231,12 +231,12 @@ export const MOVES: Record<MoveId, MoveDefinition> = {
     startup: 0.18,
     active: 0.12,
     recovery: 0.24,
-    damage: 10,
-    staminaCost: 9,
+    damage: 4.8,
+    staminaCost: 8.0,
     reach: 1.62,
-    knockback: 1.95,
+    knockback: 1.9,
     stunDuration: 0.3,
-    koMultiplier: 0.9,
+    koMultiplier: 0.85,
     isHeavy: true,
     lungeSpeed: 1.5,
   },
@@ -247,12 +247,12 @@ export const MOVES: Record<MoveId, MoveDefinition> = {
     startup: 0.16,
     active: 0.11,
     recovery: 0.22,
-    damage: 13.5,
-    staminaCost: 10,
+    damage: 6.6,
+    staminaCost: 9.0,
     reach: 1.0,
     knockback: 0.8,
     stunDuration: 0.35,
-    koMultiplier: 1.35,
+    koMultiplier: 1.25,
     isHeavy: true,
     lungeSpeed: 1.1,
   },
@@ -327,8 +327,8 @@ export const MOVES: Record<MoveId, MoveDefinition> = {
     startup: 0.2,
     active: 0.16,
     recovery: 0.34,
-    damage: 5,
-    staminaCost: 14,
+    damage: 2.5,
+    staminaCost: 12.5,
     reach: 1.38,
     knockback: 0,
     stunDuration: 0.45,
@@ -343,12 +343,12 @@ export const MOVES: Record<MoveId, MoveDefinition> = {
     startup: 0.14,
     active: 0.1,
     recovery: 0.22,
-    damage: 10.5,
-    staminaCost: 8.5,
+    damage: 5.0,
+    staminaCost: 8.0,
     reach: 1.0,
     knockback: 0,
     stunDuration: 0.26,
-    koMultiplier: 1.4,
+    koMultiplier: 1.35,
     isHeavy: true,
     lungeSpeed: 0,
   },
@@ -1150,6 +1150,8 @@ function evaluateActiveMove(
     attacker.posture === 'standing'
   ) {
     attacker.moveHasHit = true;
+    // Clean slip opens a longer counter-strike window for the defender
+    defender.counterWindow = Math.max(defender.counterWindow, 0.78);
     return false;
   }
 
@@ -1301,10 +1303,11 @@ function evaluateActiveMove(
       ? def.zone
       : 'body';
 
-  // Counter-hit bonus
+  // Counter-hit bonus (when countering a slip/block or interrupting an active swing)
   const isCounter =
-    attacker.counterWindow > 0 || defender.activeMove !== 'none';
-  const counterMult = isCounter ? 1.28 : 1.0;
+    attacker.counterWindow > 0 ||
+    (defender.activeMove !== 'none' && MOVES[defender.activeMove].zone !== 'evade');
+  const counterMult = isCounter ? 1.48 : 1.0;
 
   // Guard mitigation
   let blocked = false;
@@ -1316,8 +1319,11 @@ function evaluateActiveMove(
       (zone === 'body' && defender.blockZone === 'high');
     if (matchedZone) {
       blocked = true;
-      blockMult = def.isHeavy ? 0.24 : 0.14;
-      defender.stamina = Math.max(0, defender.stamina - def.damage * 0.55);
+      blockMult = def.isHeavy ? 0.2 : 0.12;
+      defender.stamina = Math.max(0, defender.stamina - def.damage * 0.65);
+      if (def.isHeavy) {
+        defender.counterWindow = Math.max(defender.counterWindow, 0.52);
+      }
     } else {
       blockMult = 0.72;
     }
@@ -1338,21 +1344,24 @@ function evaluateActiveMove(
 
   if (!blocked) {
     attacker.strikesLanded += 1;
+    if (isCounter) {
+      attacker.counterWindow = 0;
+    }
     if (zone === 'head') {
       defender.headIntegrity = Math.max(
         0,
-        defender.headIntegrity - finalDamage * 1.15,
+        defender.headIntegrity - finalDamage * 0.78,
       );
     } else if (zone === 'body') {
       defender.bodyIntegrity = Math.max(
         0,
-        defender.bodyIntegrity - finalDamage * 1.25,
+        defender.bodyIntegrity - finalDamage * 0.85,
       );
-      defender.stamina = Math.max(0, defender.stamina - finalDamage * 0.6);
+      defender.stamina = Math.max(0, defender.stamina - finalDamage * 0.75);
     } else {
       defender.legIntegrity = Math.max(
         0,
-        defender.legIntegrity - finalDamage * 1.45,
+        defender.legIntegrity - finalDamage * 0.95,
       );
     }
 
@@ -1365,7 +1374,10 @@ function evaluateActiveMove(
       defender.moveTimer = 0;
     }
 
-    defender.stunTimer = Math.max(defender.stunTimer, def.stunDuration);
+    defender.stunTimer = Math.max(
+      defender.stunTimer,
+      isCounter ? def.stunDuration * 1.35 : def.stunDuration,
+    );
 
     // Knockback
     if (defender.posture === 'standing') {
@@ -1389,6 +1401,7 @@ function evaluateActiveMove(
     targetSlot: defender.slot,
     zone,
     isHeavy: def.isHeavy && !blocked,
+    isCounter: isCounter && !blocked,
     x: defender.x - dirX * 0.2,
     y: defender.posture === 'ground_bottom' ? 0.35 : hitY,
     z: defender.z - dirZ * 0.2,
@@ -1407,12 +1420,12 @@ function evaluateActiveMove(
 
   if (!blocked && zone === 'head') {
     const koRisk =
-      ((100 - defender.headIntegrity) / 100) * 0.45 * def.koMultiplier +
+      ((100 - defender.headIntegrity) / 100) * 0.42 * def.koMultiplier +
       (defender.stamina < 15 ? 0.12 : 0) +
-      (isCounter ? 0.14 : 0);
+      (isCounter ? 0.16 : 0);
 
-    if (def.isHeavy && defender.headIntegrity < 32 && koRisk > 0.48) {
-      if (defender.knockdowns >= 2 || defender.health < 18) {
+    if (def.isHeavy && defender.headIntegrity < 28 && koRisk > 0.48) {
+      if (defender.knockdowns >= 3 || (defender.health < 12 && defender.headIntegrity < 18)) {
         defender.health = 0;
         finishMatch(state, attacker.slot, 'NOCAUTE (KO)');
         return true;
@@ -1430,7 +1443,7 @@ function evaluateActiveMove(
         y: 0.4,
         z: defender.z,
       });
-    } else if (def.isHeavy && defender.headIntegrity < 65 && koRisk > 0.25) {
+    } else if (def.isHeavy && defender.headIntegrity < 55 && koRisk > 0.28) {
       defender.rockedTimer = 2.0;
       pushEvent(state, {
         type: 'rocked',

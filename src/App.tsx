@@ -487,6 +487,10 @@ export default function App() {
             const mp = ensureMpClient();
             mp.joinRoom(code, selectedFighter).catch(() => {});
           }}
+          onEnterWithPassword={(password) => {
+            const mp = ensureMpClient();
+            mp.enterWithPassword(password, selectedFighter).catch(() => {});
+          }}
           onSelectFighter={(id) => {
             setSelectedFighter(id);
             mpRef.current?.selectFighter(id);
